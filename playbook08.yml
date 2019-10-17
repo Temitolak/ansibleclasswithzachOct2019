@@ -1,0 +1,15 @@
+---
+- name: Copying files from controller to hosts
+  hosts: planet-express
+
+  tasks:
+
+    - name: Copy Fry's resume to hosts
+      copy:
+        src: ~/ans/files/fry.txt #on the controller
+        dest: ~/fry.txt  #home directory on hosts
+
+    - name: download a file
+      get_url:
+              url: http://www.clamav.net/downloads/production/clamav-0.99.3.tar.gz
+              dest: ~/clamav-0.99.3.tar.gz

@@ -1,0 +1,35 @@
+---
+- name: Find / files ending with .pcap or .pcapng
+  find:
+          # paths: ~/
+          paths: "{{ pathy }}"
+          #patterns: '*.pcap,*.pcapng,*.txt'
+          patterns: "{{ patt }}"
+          # size: 10m
+          recurse: yes
+  register: results
+
+- name: what is in the results
+  debug:
+          var: results.files
+          verbosity: 1
+
+#Create the directory to store our results
+- name: Create a directory if it does not exist
+  file:
+          path: "~/searchresults/{{ inventory_hostname }}"
+          state: directory
+  delegate_to: localhost
+  # run_once: yes
+
+#    mode: '0755'
+
+# parse the results (loop)
+# pull them back to the controller (fetch module)
+- name: pull files back to the controller
+  fetch:
+          src: "{{ item.path }}"
+          dest: "~/searchresults/{{ inventory_hostname }}/"
+          flat: yes
+  loop: "{{ results.files }}"
+ 
